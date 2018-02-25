@@ -77,11 +77,14 @@ function getCurrentPosition(
 
         case CLBindingsErrorType.CLocationErrorNoLocationService:
         case CLBindingsErrorType.CLocationErrorLocationServiceDenied:
-          error = {
-            ...PositionErrorConsts,
-            code: HTML5PositionErrorType.PERMISSION_DENIED,
-            message: 'Permission denied',
-          };
+          error = Object.assign(
+            {},
+            PositionErrorConsts,
+            {
+              code: HTML5PositionErrorType.PERMISSION_DENIED,
+              message: 'Permission denied',
+            },
+          );
 
           errorCallback && errorCallback(error);
           break;
