@@ -1,0 +1,38 @@
+{
+  "name": "macos-location",
+  "version": "1.0.0",
+  "description": "Wrapper around macOS CoreLocation services.",
+  "keywords": [
+    "osx",
+    "macos",
+    "corelocation",
+    "geolocation",
+    "location",
+    "getCurrentPosition",
+    "position",
+    "latlng",
+    "latitude",
+    "longitude"
+  ],
+  "license": "MIT",
+  "author": "Jakub Synowiec <github@jakubsynowiec.info>",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "engines": {
+    "node": ">=6.9.0"
+  },
+  "scripts": {
+    "build": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsynowiec/macos-location"
+  },
+  "bugs": {
+    "url": "https://github.com/jsynowiec/macos-location/issues"
+  },
+  "homepage": "https://github.com/jsynowiec/macos-location",
+  "dependencies": {
+    "node-gyp": "^3.6.2"
+  }
+}
