@@ -63,11 +63,14 @@ function getCurrentPosition(
       switch (e.message) {
         case CLBindingsErrorType.CLocationErrorLookupFailed:
         case CLBindingsErrorType.CLocationErrorLocationUnknown:
-          error = {
-            ...PositionErrorConsts,
-            code: HTML5PositionErrorType.POSITION_UNAVAILABLE,
-            message: 'Position unavailable',
-          };
+          error = Object.assign(
+            {},
+            PositionErrorConsts,
+            {
+              code: HTML5PositionErrorType.POSITION_UNAVAILABLE,
+              message: 'Position unavailable',
+            },
+          );
 
           errorCallback && errorCallback(error);
           break;
