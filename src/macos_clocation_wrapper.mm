@@ -35,18 +35,21 @@ using namespace node;
   // In case there were several requests the last object is the most recent one
   CLLocation *location = [locations lastObject];
 
-  self.latitude = location.coordinate.latitude;
-  self.longitude = location.coordinate.longitude;
-  self.altitude = location.altitude;
-  self.horizontalAccuracy = location.horizontalAccuracy;
-  self.verticalAccuracy = location.verticalAccuracy;
+  if ([location.timestamp timeIntervalSinceNow] > -60.0) {
+    // The value is not older than 60 sec.
+    self.latitude = location.coordinate.latitude;
+    self.longitude = location.coordinate.longitude;
+    self.altitude = location.altitude;
+    self.horizontalAccuracy = location.horizontalAccuracy;
+    self.verticalAccuracy = location.verticalAccuracy;
 
-  NSTimeInterval seconds = [[location timestamp] timeIntervalSince1970];
-  self.timestamp = (NSInteger)ceil(seconds * 1000);
+    NSTimeInterval seconds = [location.timestamp timeIntervalSince1970];
+    self.timestamp = (NSInteger)ceil(seconds * 1000);
 
-  self.failed = NO;
+    self.failed = NO;
 
-  CFRunLoopStop(CFRunLoopGetCurrent());
+    CFRunLoopStop(CFRunLoopGetCurrent());
+  }
 
   [pool drain];
 }
