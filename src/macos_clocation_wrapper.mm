@@ -43,26 +43,25 @@ using namespace node;
 
 - (void)locationManager:(CLLocationManager *)manager
   didUpdateLocations:(NSArray<CLLocation *> *)locations {
-  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-  // In case there were several requests the last object is the most recent one
-  CLLocation *location = [locations lastObject];
+  @autoreleasepool {
+    // In case there were several requests the last object is the most recent one
+    CLLocation *location = [locations lastObject];
 
-  if ([location.timestamp timeIntervalSinceNow] > (self.maximumAge * -1)) {
-    self.latitude = location.coordinate.latitude;
-    self.longitude = location.coordinate.longitude;
-    self.altitude = location.altitude;
-    self.horizontalAccuracy = location.horizontalAccuracy;
-    self.verticalAccuracy = location.verticalAccuracy;
+    if ([location.timestamp timeIntervalSinceNow] > (self.maximumAge * -1)) {
+      self.latitude = location.coordinate.latitude;
+      self.longitude = location.coordinate.longitude;
+      self.altitude = location.altitude;
+      self.horizontalAccuracy = location.horizontalAccuracy;
+      self.verticalAccuracy = location.verticalAccuracy;
 
-    NSTimeInterval seconds = [location.timestamp timeIntervalSince1970];
-    self.timestamp = (NSInteger)ceil(seconds * 1000);
+      NSTimeInterval seconds = [location.timestamp timeIntervalSince1970];
+      self.timestamp = (NSInteger)ceil(seconds * 1000);
 
-    self.failed = NO;
+      self.failed = NO;
 
-    CFRunLoopStop(CFRunLoopGetCurrent());
+      CFRunLoopStop(CFRunLoopGetCurrent());
+    }
   }
-
-  [pool drain];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
