@@ -104,11 +104,10 @@ void getCurrentPosition(const FunctionCallbackInfo<Value>& args) {
 
       Local<String> maximumAgeKey = String::NewFromUtf8(isolate, "maximumAge");
       if (options->Has(maximumAgeKey)) {
-        delegate.maximumAge = options->Get(maximumAgeKey)->NumberValue();
         // Anything less than 100ms doesn't make any sense
-        if (delegate.maximumAge < 100) {
-          delegate.maximumAge = 100;
-        }
+        delegate.maximumAge = MAX(
+          100, options->Get(maximumAgeKey)->NumberValue()
+        );
         delegate.maximumAge /= 1000;
       }
 
