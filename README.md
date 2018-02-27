@@ -40,7 +40,12 @@ function errorCallback(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 };
 
-getCurrentPosition(successCallback, errorCallback);
+// https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions
+const options = {
+  maximumAge: 60000,
+};
+
+getCurrentPosition(successCallback, errorCallback, options);
 ```
 
 If you don't like callbacks, you can wrap the location request in a Promise.
@@ -52,8 +57,6 @@ const p = new Promise((resolve, reject) => {
   getCurrentPosition(resolve, reject);
 });
 ```
-
-**Notice:** [PositionOptions][w3-geolocation-api-position-options] object passed as a third argument to the `getCurrentPosition` method is currently unsupported.
 
 ## License
 

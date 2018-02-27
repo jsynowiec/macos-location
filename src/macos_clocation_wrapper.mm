@@ -19,6 +19,9 @@ using namespace node;
 @property (getter=hasFailed) bool failed;
 @property NSInteger errorCode;
 
+@property double maximumAge;
+@property bool enableHighAccuracy;
+
 - (void)locationManager:(CLLocationManager *)manager
   didUpdateLocations:(NSArray<CLLocation *> *)locations;
 
@@ -29,14 +32,22 @@ using namespace node;
 
 @implementation LocationManagerDelegate
 
+-(id)init {
+  if (self = [super init]) {
+    self.failed = NO;
+    self.maximumAge = 0.1;
+    self.enableHighAccuracy = NO;
+  }
+  return self;
+}
+
 - (void)locationManager:(CLLocationManager *)manager
   didUpdateLocations:(NSArray<CLLocation *> *)locations {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   // In case there were several requests the last object is the most recent one
   CLLocation *location = [locations lastObject];
 
-  if ([location.timestamp timeIntervalSinceNow] > -60.0) {
-    // The value is not older than 60 sec.
+  if ([location.timestamp timeIntervalSinceNow] > (self.maximumAge * -1)) {
     self.latitude = location.coordinate.latitude;
     self.longitude = location.coordinate.longitude;
     self.altitude = location.altitude;
@@ -85,6 +96,34 @@ void getCurrentPosition(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
   HandleScope scope(isolate);
 
+  LocationManagerDelegate *delegate = [[LocationManagerDelegate alloc] init];
+
+  if (args.Length() == 1) {
+    if (args[0]->IsObject()) {
+      Local<Object> options = args[0]->ToObject();
+
+      Local<String> maximumAgeKey = String::NewFromUtf8(isolate, "maximumAge");
+      if (options->Has(maximumAgeKey)) {
+        delegate.maximumAge = options->Get(maximumAgeKey)->NumberValue();
+        // Anything less than 100ms doesn't make any sense
+        if (delegate.maximumAge < 100) {
+          delegate.maximumAge = 100;
+        }
+        delegate.maximumAge /= 1000;
+      }
+
+      Local<String> enableHighAccuracyKey = String::NewFromUtf8(
+        isolate, "enableHighAccuracy"
+      );
+      if (options->Has(enableHighAccuracyKey)) {
+        delegate.enableHighAccuracy = options->Get(
+          enableHighAccuracyKey
+        )->BooleanValue();
+      }
+
+    }
+  }
+
   if (!enableCoreLocation()) {
     isolate->ThrowException(
       Exception::TypeError(
@@ -94,7 +133,10 @@ void getCurrentPosition(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-  LocationManagerDelegate *delegate = [[LocationManagerDelegate alloc] init];
+  if (delegate.enableHighAccuracy) {
+    [locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+  }
+
   [locationManager setDelegate:delegate];
   [locationManager startUpdatingLocation];
 

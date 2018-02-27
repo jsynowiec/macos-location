@@ -24,71 +24,67 @@ let lastResult;
 function getCurrentPosition(
   successCallback,
   errorCallback,
-  options = {
-    maximumAge: 0,
-    timeout: 0, // dummy, value is not used
-    enableHighAccuracy: false, // dummy, value is not used
-  },
+  {
+    maximumAge = 0,
+    timeout = 0,
+    enableHighAccuracy = false,
+  } = {},
 ) {
+  const options = {
+    maximumAge,
+    timeout,
+    enableHighAccuracy,
+  };
   const timestamp = new Date().getTime();
 
-  if (
-    options.maximumAge &&
-    options.maximumAge > 0 &&
-    lastResult &&
-    lastResult.timestamp + options.maximumAge >= timestamp
-  ) {
+  try {
+    const result = CLBindings.getCurrentPosition(options);
+
+    lastResult = {
+      coords: {
+        accuracy: result.horizontalAccuracy,
+        altitude: result.altitude,
+        altitudeAccuracy: result.verticalAccuracy,
+        heading: null,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        speed: null,
+      },
+      timestamp: result.timestamp,
+    };
+
     successCallback(lastResult);
-  } else {
-    try {
-      const result = CLBindings.getCurrentPosition();
+  } catch (e) {
+    let error;
 
-      lastResult = {
-        coords: {
-          accuracy: result.horizontalAccuracy,
-          altitude: result.altitude,
-          altitudeAccuracy: result.verticalAccuracy,
-          heading: null,
-          latitude: result.latitude,
-          longitude: result.longitude,
-          speed: null,
-        },
-        timestamp: result.timestamp,
-      };
+    switch (e.message) {
+      case CLBindingsErrorType.CLocationErrorLookupFailed:
+      case CLBindingsErrorType.CLocationErrorLocationUnknown:
+        error = Object.assign(
+          {},
+          PositionErrorConsts,
+          {
+            code: HTML5PositionErrorType.POSITION_UNAVAILABLE,
+            message: 'Position unavailable',
+          },
+        );
 
-      successCallback(lastResult);
-    } catch (e) {
-      let error;
+        errorCallback && errorCallback(error);
+        break;
 
-      switch (e.message) {
-        case CLBindingsErrorType.CLocationErrorLookupFailed:
-        case CLBindingsErrorType.CLocationErrorLocationUnknown:
-          error = Object.assign(
-            {},
-            PositionErrorConsts,
-            {
-              code: HTML5PositionErrorType.POSITION_UNAVAILABLE,
-              message: 'Position unavailable',
-            },
-          );
+      case CLBindingsErrorType.CLocationErrorNoLocationService:
+      case CLBindingsErrorType.CLocationErrorLocationServiceDenied:
+        error = Object.assign(
+          {},
+          PositionErrorConsts,
+          {
+            code: HTML5PositionErrorType.PERMISSION_DENIED,
+            message: 'Permission denied',
+          },
+        );
 
-          errorCallback && errorCallback(error);
-          break;
-
-        case CLBindingsErrorType.CLocationErrorNoLocationService:
-        case CLBindingsErrorType.CLocationErrorLocationServiceDenied:
-          error = Object.assign(
-            {},
-            PositionErrorConsts,
-            {
-              code: HTML5PositionErrorType.PERMISSION_DENIED,
-              message: 'Permission denied',
-            },
-          );
-
-          errorCallback && errorCallback(error);
-          break;
-      }
+        errorCallback && errorCallback(error);
+        break;
     }
   }
 }
