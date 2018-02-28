@@ -46,8 +46,9 @@ using namespace node;
   @autoreleasepool {
     // In case there were several requests the last object is the most recent one
     CLLocation *location = [locations lastObject];
+    NSTimeInterval locationAge = [location.timestamp timeIntervalSinceNow];
 
-    if ([location.timestamp timeIntervalSinceNow] > (self.maximumAge * -1)) {
+    if (abs(locationAge) < self.maximumAge) {
       self.latitude = location.coordinate.latitude;
       self.longitude = location.coordinate.longitude;
       self.altitude = location.altitude;
