@@ -77,10 +77,6 @@
 }
 
 - (CLLocation *)getCurrentLocation {
-  while (!([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined)) {
-    [[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.001]];
-  }
-
   [self start];
 
   NSDate* end = (self.timeout > 0) ? [NSDate dateWithTimeIntervalSinceNow:(NSUInteger)ceil(self.timeout / 1000)] : nil;
