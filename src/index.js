@@ -5,6 +5,7 @@ const CLBindingsErrorType = {
   CLocationErrorLocationServiceDenied: 'CLocationErrorLocationServiceDenied',
   CLocationErrorLocationUnknown: 'CLocationErrorLocationUnknown',
   CLocationErrorLookupFailed: 'CLocationErrorLookupFailed',
+  CLocationErrorGeocodeCanceled: 'CLocationErrorGeocodeCanceled',
 };
 
 const HTML5PositionErrorType = {
@@ -25,9 +26,9 @@ function getCurrentPosition(
   successCallback,
   errorCallback,
   {
-    maximumAge = 0,
+    maximumAge = 120000,
     timeout = 0,
-    enableHighAccuracy = false,
+    enableHighAccuracy = true,
   } = {},
 ) {
   const options = {
@@ -66,6 +67,19 @@ function getCurrentPosition(
           {
             code: HTML5PositionErrorType.POSITION_UNAVAILABLE,
             message: 'Position unavailable',
+          },
+        );
+
+        errorCallback && errorCallback(error);
+        break;
+
+      case CLBindingsErrorType.CLocationErrorGeocodeCanceled:
+        error = Object.assign(
+          {},
+          PositionErrorConsts,
+          {
+            code: HTML5PositionErrorType.TIMEOUT,
+            message: 'Timeout',
           },
         );
 

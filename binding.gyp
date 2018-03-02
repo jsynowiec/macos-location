@@ -3,7 +3,8 @@
     {
       'target_name': 'bindings',
       'sources': [
-        'src/macos_clocation_wrapper.mm'
+        'src/LocationManager.mm',
+        'src/CLLocationBindings.mm'
       ],
       'link_settings': {
         'libraries': [
