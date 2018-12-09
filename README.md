@@ -2,6 +2,7 @@
 
 [![Node.js version][nodejs-badge]][nodejs]
 [![License][badge-license]][license]
+
 [![Donate][badge-donate]][donate]
 
 Wrapper around macOS [Core Location][corelocation] services. Can serve as a drop-in replacement for [HTML5 Geolocation API][w3-geolocation-api] in Electron applications.
@@ -60,9 +61,7 @@ const p = new Promise((resolve, reject) => {
 
 ## License
 
-Copyright © 2018 Jakub Synowiec
-
-Licensed under the the [MIT License][license].
+Released under the the [MIT License][license].
 
 [corelocation]: https://developer.apple.com/documentation/corelocation
 [w3-geolocation-api]: https://www.w3.org/TR/geolocation-API/
@@ -75,5 +74,5 @@ Licensed under the the [MIT License][license].
 [badge-npm-version]: https://img.shields.io/npm/v/macos-location.svg
 [package-npm]: https://www.npmjs.com/package/macos-location
 [badge-license]: https://img.shields.io/github/license/jsynowiec/macos-location.svg
-[badge-donate]: https://img.shields.io/badge/€-donate-brightgreen.svg
-[donate]: http://bit.ly/donate-js
+[badge-donate]: https://img.shields.io/badge/☕-buy%20me%20a%20coffee-46b798.svg
+[donate]: https://ko-fi.com/X8X8N42K
