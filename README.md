@@ -1,9 +1,9 @@
-# macos-location [![Latest version on NPM registy][badge-npm-version]][package-npm]
+# macos-location
 
+[![Sponsor][sponsor-badge]][sponsor]
+[![Latest version on NPM registy][badge-npm-version]][package-npm]
 [![Node.js version][nodejs-badge]][nodejs]
 [![License][badge-license]][license]
-
-[![Donate][badge-donate]][donate]
 
 Wrapper around macOS [Core Location][corelocation] services. Can serve as a drop-in replacement for [HTML5 Geolocation API][w3-geolocation-api] in Electron applications.
 
@@ -74,5 +74,5 @@ Released under the the [MIT License][license].
 [badge-npm-version]: https://img.shields.io/npm/v/macos-location.svg
 [package-npm]: https://www.npmjs.com/package/macos-location
 [badge-license]: https://img.shields.io/github/license/jsynowiec/macos-location.svg
-[badge-donate]: https://img.shields.io/badge/☕-buy%20me%20a%20coffee-46b798.svg
-[donate]: https://paypal.me/jaqb/5eur
+[sponsor-badge]: https://img.shields.io/badge/♥-Sponsor-fc0fb5.svg
+[sponsor]: https://github.com/sponsors/jsynowiec
